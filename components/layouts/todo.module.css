@@ -1,0 +1,115 @@
+.container {
+  background-color: aqua;
+  height: 2.5rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.containerTodo {
+  position: relative;
+}
+
+.checkbox {
+  width: 1rem;
+  height: 1rem;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.textTodo {
+  font-size: 1rem;
+  width: calc(94vw - 11.9375rem);
+  height: 1.5rem;
+  position: absolute;
+  top: 50%;
+  left: 2rem;
+  transform: translateY(-50%);
+}
+
+.containerIcons {
+  position: relative;
+}
+
+.icon {
+  color: var(--black);
+  font-size: 1.5rem;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.deadLine {
+  composes: icon;
+  font-size: 1rem;
+  right: 3.9375rem;
+  width: 5rem;
+  height: 1.5rem;
+}
+
+.calendar {
+  composes: icon;
+  right: 2.125rem;
+}
+
+.calendar:hover {
+  cursor: pointer;
+}
+
+.memo {
+  composes: icon;
+  right: 0rem;
+}
+
+.memo:hover {
+  cursor: pointer;
+}
+
+/* PC用の設定 */
+@media (min-width: 768px) {
+  .container {
+    height: 3rem;
+  }
+
+  .checkbox {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  .textTodo {
+    font-size: 1.3rem;
+    width: calc(74vw - 14.75rem);
+    height: 2rem;
+    left: 2.5rem;
+  }
+
+  .icon {
+    font-size: 2rem;
+  }
+
+  .deadLine {
+    font-size: 1.3rem;
+    right: 4.75rem;
+    width: 6.5rem;
+    height: 2rem;
+  }
+
+  .calendar {
+    right: 2.5rem;
+  }
+
+  .memo {
+    right: 0rem;
+  }
+}
+
+/* 大きい画面用の設定 */
+@media (min-width: 1400px) {
+  .container {
+    width: 1036px;
+  }
+
+  .textTodo {
+    width: 800px;
+  }
+}

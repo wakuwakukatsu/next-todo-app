@@ -1,0 +1,11 @@
+.flexContainer {
+  background-color: #d9d9d9;
+  height: 3rem;
+}
+
+.flexContainer h1 {
+  color: var(--black);
+  font-size: var(--heading1);
+  padding-left: 1rem;
+  line-height: 3rem;
+}

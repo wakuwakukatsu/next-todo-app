@@ -1,0 +1,72 @@
+.container {
+  background-color: var(--gray);
+  margin: 1rem auto;
+}
+
+/* PC用の設定 */
+@media (min-width: 768px) {
+  .container {
+    width: 80vw;
+    margin: 1rem auto;
+  }
+}
+
+@media (min-width: 1400px) {
+  .container {
+    max-width: 1120px;
+  }
+}
+
+.containerMain {
+  margin-left: 3vw;
+  margin-right: 3vw;
+}
+
+.containerButton {
+  height: 3rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+@media (min-width: 1400px) {
+  .containerButton {
+    width: 1036px;
+  }
+}
+
+.buttons {
+  position: relative;
+  width: 100%;
+}
+
+.compButton {
+  composes: buttons;
+  width: fit-content;
+}
+
+.todos {
+  height: calc(100vh - 11.0625rem);
+}
+
+.containerInput {
+  height: 3rem;
+  border-top: 1px solid var(--black);
+  position: relative;
+}
+
+.inputTodo {
+  font-size: 1.3rem;
+  height: 2rem;
+  width: 50vw;
+  position: absolute;
+  top: 50%;
+  left: 3vw;
+  transform: translateY(-50%);
+}
+
+@media (min-width: 1400px) {
+  .inputTodo {
+    width: 700px;
+    left: 42px;
+  }
+}

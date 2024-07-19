@@ -1,0 +1,58 @@
+.btn:hover {
+  cursor: pointer;
+}
+
+.default {
+  composes: btn;
+  color: var(--white);
+  background-color: var(--black);
+  padding: 0.2rem 1rem;
+  border-radius: 0.4rem;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.default + .default {
+  left: 4.5rem;
+}
+
+.default + .default + .default {
+  left: 9rem;
+}
+
+.comp {
+  composes: default;
+  white-space: nowrap;
+  transform: translate(-100%, -50%);
+}
+
+.add {
+  composes: default;
+  position: absolute;
+  top: 50%;
+  left: calc(53vw + 3rem);
+  transform: translateY(-50%);
+}
+
+/* PC用の設定 */
+@media (min-width: 768px) {
+  .default {
+    padding: 0.5rem 1.5rem;
+  }
+
+  .default + .default {
+    left: 6rem;
+  }
+
+  .default + .default + .default {
+    left: 12rem;
+  }
+}
+
+/* 大きい画面用の設定 */
+@media (min-width: 1400px) {
+  .add {
+    left: 49.625rem;
+  }
+}
