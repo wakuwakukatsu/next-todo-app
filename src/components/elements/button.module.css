@@ -6,7 +6,7 @@
   composes: btn;
   color: var(--white);
   background-color: var(--black);
-  padding: 0.2rem 1rem;
+  padding: 0.2rem 0.4rem;
   border-radius: 0.4rem;
   position: absolute;
   top: 50%;
@@ -14,11 +14,7 @@
 }
 
 .default + .default {
-  left: 4.5rem;
-}
-
-.default + .default + .default {
-  left: 9rem;
+  left: 3.5rem;
 }
 
 .comp {
@@ -29,10 +25,8 @@
 
 .add {
   composes: default;
-  position: absolute;
-  top: 50%;
-  left: calc(53vw + 3rem);
-  transform: translateY(-50%);
+  position: static;
+  transform: translate(0%, 0%);
 }
 
 /* PC用の設定 */

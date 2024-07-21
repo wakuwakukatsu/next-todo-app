@@ -1,0 +1,96 @@
+.container {
+  background-color: var(--gray);
+  margin: 1rem auto;
+}
+
+.containerMain {
+  margin-left: 3vw;
+  margin-right: 3vw;
+}
+
+.containerButton {
+  height: 3rem;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--black);
+}
+
+.buttons {
+  position: relative;
+  width: 100%;
+}
+
+.delete {
+  font-size: 1.5rem;
+  position: absolute;
+  top: 50%;
+  left: 7rem;
+  transform: translateY(-50%);
+}
+
+.compButton {
+  composes: buttons;
+  width: fit-content;
+}
+
+.todos {
+  height: calc(100vh - 11.0625rem);
+}
+
+.containerInput {
+  border-top: 1px solid var(--black);
+  min-height: 1.5rem;
+  max-height: 2.8125rem;
+  padding: 0.5rem 3vw;
+  display: flex;
+  justify-content: space-between;
+}
+
+.wrapperTextarea {
+  display: flex;
+  align-items: center;
+}
+
+.inputTodo {
+  font-size: 1rem;
+  width: calc(94vw - 3.4125rem);
+  min-height: 1.5rem;
+  max-height: 2.9375rem;
+  field-sizing: content;
+  resize: none;
+}
+
+.wrapperButton {
+  display: flex;
+  align-items: center;
+}
+
+/* PC用の設定 */
+@media (min-width: 768px) {
+  .container {
+    width: 80vw;
+    margin: 1rem auto;
+  }
+
+  .inputTodo {
+    font-size: 1.3rem;
+    height: 2rem;
+    width: 50vw;
+  }
+}
+
+/* 大きい画面用の設定 */
+@media (min-width: 1400px) {
+  .container {
+    max-width: 1120px;
+  }
+
+  .containerButton {
+    width: 1036px;
+  }
+
+  .inputTodo {
+    width: 700px;
+    left: 42px;
+  }
+}
