@@ -21,7 +21,7 @@ export default function Todos() {
           </div>
         </div>
 
-        <div className={styles.todos}>
+        <div className={styles.todos} id="todos">
           <Todo />
         </div>
       </div>
@@ -33,6 +33,15 @@ export default function Todos() {
             placeholder="Todoを入力"
             wrap="soft"
             id="textarea"
+            // onInput={() => {
+            //   const todosArea = document.getElementById("todos");
+            //   const inputArea = document.getElementById("containerInput");
+            //   const inputAreaHeight = inputArea?.clientHeight;
+            //   document.documentElement.style.setProperty(
+            //     "--vh",
+            //     `${inputAreaHeight}px`
+            //   );
+            // }}
           />
         </div>
         <div className={styles.wrapperButton}>

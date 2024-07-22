@@ -23,6 +23,7 @@ export default function Todo() {
         <textarea
           className={styles.textTodo}
           placeholder="Todo"
+          rows={2}
           wrap="soft"
           id={uniqueStr2}
           onInput={() => {
