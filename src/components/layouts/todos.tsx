@@ -5,6 +5,8 @@ import Button from "../elements/button";
 import Todo from "./todo";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { height } from "@fortawesome/free-brands-svg-icons/fa42Group";
+import { redirect } from "next/dist/server/api-utils";
 
 export default function Todos() {
   return (
@@ -33,15 +35,15 @@ export default function Todos() {
             placeholder="Todoを入力"
             wrap="soft"
             id="textarea"
-            // onInput={() => {
-            //   const todosArea = document.getElementById("todos");
-            //   const inputArea = document.getElementById("containerInput");
-            //   const inputAreaHeight = inputArea?.clientHeight;
-            //   document.documentElement.style.setProperty(
-            //     "--vh",
-            //     `${inputAreaHeight}px`
-            //   );
-            // }}
+            onInput={() => {
+              const element = document.getElementById("containerInput");
+              const rect = element?.getBoundingClientRect();
+              console.log(`${rect?.height}px)`);
+              document.documentElement.style.setProperty(
+                "--inputArea-height",
+                `${rect?.height}px`
+              );
+            }}
           />
         </div>
         <div className={styles.wrapperButton}>

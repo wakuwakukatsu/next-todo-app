@@ -34,7 +34,8 @@
 }
 
 .todos {
-  height: calc(100vh - 10rem);
+  /* --inputArea-height: 2.875rem; */
+  height: calc(100vh - 7.125rem - var(--inputArea-height, 2.875rem));
 }
 
 .containerInput {
