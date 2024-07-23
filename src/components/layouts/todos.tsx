@@ -5,10 +5,11 @@ import Button from "../elements/button";
 import Todo from "./todo";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { height } from "@fortawesome/free-brands-svg-icons/fa42Group";
-import { redirect } from "next/dist/server/api-utils";
+import { useState } from "react";
 
 export default function Todos() {
+  const [infoIsOpen, setInfoIsOpen] = useState<boolean>(false);
+
   return (
     <div className={styles.container}>
       <div className={styles.containerMain}>
@@ -24,7 +25,10 @@ export default function Todos() {
         </div>
 
         <div className={styles.todos} id="todos">
-          <Todo />
+          <Todo setInfoIsOpen={setInfoIsOpen} />
+        </div>
+        <div className={infoIsOpen ? styles.open : styles.close}>
+          <div className={styles.info}></div>
         </div>
       </div>
 

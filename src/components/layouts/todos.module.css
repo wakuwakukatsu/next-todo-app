@@ -38,6 +38,18 @@
   height: calc(100vh - 7.125rem - var(--inputArea-height, 2.875rem));
 }
 
+.info {
+  position: fixed;
+  inset: 0 -100% 0 100%;
+  z-index: 1;
+  transition: transform 0.4s;
+  background-color: aliceblue;
+}
+
+.open .info {
+  transform: translateX(-100%);
+}
+
 .containerInput {
   border-top: 1px solid var(--black);
   max-height: 2.6rem;

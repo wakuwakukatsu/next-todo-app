@@ -5,11 +5,19 @@ import { getUniqueStr } from "@/utility/util";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendar, faFile } from "@fortawesome/free-regular-svg-icons";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Dispatch, SetStateAction } from "react";
 
-export default function Todo() {
+type Props = {
+  setInfoIsOpen: Dispatch<SetStateAction<boolean>>;
+};
+
+export default function Todo({ setInfoIsOpen }: Props) {
   const [uniqueStr1, setUniqueStr1] = useState("1");
   const [uniqueStr2, setUniqueStr2] = useState("2");
+
+  const toggleInfo = () => {
+    setInfoIsOpen((prev) => !prev);
+  };
 
   useEffect(() => {
     setUniqueStr1(getUniqueStr());
@@ -40,7 +48,9 @@ export default function Todo() {
         <input type="text" className={styles.deadLine} placeholder="期限" />
         <FontAwesomeIcon icon={faCalendar} className={styles.calendar} />
         <FontAwesomeIcon icon={faFile} className={styles.memo} />
-        <FontAwesomeIcon icon={faBars} className={styles.menu} />
+        <button className={styles.btnInfo} onClick={toggleInfo}>
+          <FontAwesomeIcon icon={faBars} className={styles.menu} />
+        </button>
       </div>
     </div>
   );

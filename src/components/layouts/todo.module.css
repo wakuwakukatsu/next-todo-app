@@ -73,9 +73,14 @@
   z-index: -1;
 }
 
+.btnInfo {
+  visibility: hidden;
+}
+
 .menu {
   composes: icon;
   right: 0rem;
+  visibility: visible;
 }
 
 /* PC用の設定 */
