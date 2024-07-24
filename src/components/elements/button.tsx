@@ -4,7 +4,7 @@ import { Component, ReactElement } from "react";
 
 interface Button {
   text: string;
-  type: "default" | "comp" | "add";
+  type: "default" | "comp" | "add" | "save";
 }
 
 // ボタンコンポーネント
@@ -34,6 +34,12 @@ export default function Button(button: Button, inputValue = "") {
         //   }
         // }}
       >
+        {button.text}
+      </button>
+    );
+  } else if (button.type === "save") {
+    return (
+      <button className={styles.save} type="button">
         {button.text}
       </button>
     );

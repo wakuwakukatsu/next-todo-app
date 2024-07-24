@@ -29,6 +29,13 @@
   transform: translate(0%, 0%);
 }
 
+.save {
+  composes: default;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
 /* PC用の設定 */
 @media (min-width: 768px) {
   .default {
@@ -37,10 +44,6 @@
 
   .default + .default {
     left: 6rem;
-  }
-
-  .default + .default + .default {
-    left: 12rem;
   }
 }
 

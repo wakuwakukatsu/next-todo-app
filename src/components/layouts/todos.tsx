@@ -3,12 +3,17 @@
 import styles from "./todos.module.css";
 import Button from "../elements/button";
 import Todo from "./todo";
-import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faTrash, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faCalendar } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 
 export default function Todos() {
   const [infoIsOpen, setInfoIsOpen] = useState<boolean>(false);
+
+  const toggleInfo = () => {
+    setInfoIsOpen((prev) => !prev);
+  };
 
   return (
     <div className={styles.container}>
@@ -25,10 +30,34 @@ export default function Todos() {
         </div>
 
         <div className={styles.todos} id="todos">
-          <Todo setInfoIsOpen={setInfoIsOpen} />
+          <Todo toggleInfo={toggleInfo} />
         </div>
-        <div className={infoIsOpen ? styles.open : styles.close}>
-          <div className={styles.info}></div>
+        <div className={infoIsOpen ? styles.open : undefined}>
+          <div className={styles.info}>
+            <div className={styles.wrapperBtn}>
+              <button className={styles.btnClose} onClick={toggleInfo}>
+                <FontAwesomeIcon icon={faXmark} className={styles.close} />
+              </button>
+            </div>
+            <textarea
+              className={styles.todoTitle}
+              placeholder="Todo"
+              rows={2}
+              wrap="soft"
+            ></textarea>
+            <div className={styles.wrapperDeadLine}>
+              <input type="date" className={styles.deadLine} />
+            </div>
+            <textarea
+              className={styles.todoMemo}
+              placeholder="Memo"
+              rows={2}
+              wrap="soft"
+            ></textarea>
+            <div className={styles.wrapperSaveBtn}>
+              <Button text="保存" type="save" />
+            </div>
+          </div>
         </div>
       </div>
 

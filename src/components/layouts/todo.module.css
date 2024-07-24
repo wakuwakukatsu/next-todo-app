@@ -32,6 +32,10 @@
   transform: translateY(-50%);
 }
 
+.textTodo::placeholder {
+  color: var(--placeholder);
+}
+
 .containerIcons {
   position: relative;
 }
@@ -59,6 +63,10 @@
   width: 5rem;
   height: 1.5rem;
   z-index: -1;
+}
+
+.deadLine::placeholder {
+  color: var(--placeholder);
 }
 
 .calendar {

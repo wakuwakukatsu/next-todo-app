@@ -5,19 +5,15 @@ import { getUniqueStr } from "@/utility/util";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendar, faFile } from "@fortawesome/free-regular-svg-icons";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
-import { useState, useEffect, Dispatch, SetStateAction } from "react";
+import { useState, useEffect } from "react";
 
 type Props = {
-  setInfoIsOpen: Dispatch<SetStateAction<boolean>>;
+  toggleInfo: () => void;
 };
 
-export default function Todo({ setInfoIsOpen }: Props) {
+export default function Todo({ toggleInfo }: Props) {
   const [uniqueStr1, setUniqueStr1] = useState("1");
   const [uniqueStr2, setUniqueStr2] = useState("2");
-
-  const toggleInfo = () => {
-    setInfoIsOpen((prev) => !prev);
-  };
 
   useEffect(() => {
     setUniqueStr1(getUniqueStr());
