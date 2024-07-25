@@ -112,7 +112,7 @@ button .close {
   color: var(--placeholder);
 }
 
-.wrapperDeadLine {
+.wrapperDayLimit {
   width: 100vw;
   height: 2rem;
   margin-bottom: 1.5rem;
@@ -121,7 +121,7 @@ button .close {
   justify-content: center;
 }
 
-.deadLine {
+.dayLimit {
   font-size: 1rem;
   padding: 0.5rem 3vw;
   margin-bottom: 1.5rem;
@@ -132,7 +132,7 @@ button .close {
   transform: translateY(-50%);
 }
 
-.deadLine::placeholder {
+.dayLimit::placeholder {
   color: var(--placeholder);
 }
 

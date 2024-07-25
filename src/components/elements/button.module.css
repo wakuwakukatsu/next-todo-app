@@ -2,35 +2,39 @@
   cursor: pointer;
 }
 
-.default {
+.add {
   composes: btn;
   color: var(--white);
   background-color: var(--black);
   padding: 0.2rem 0.4rem;
   border-radius: 0.4rem;
+}
+
+.save {
+  composes: add;
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
 }
 
-.default + .default {
+.comp {
+  composes: add;
+  position: absolute;
+  top: 50%;
   left: 3.5rem;
+  transform: translateY(-50%);
 }
 
-.comp {
-  composes: default;
+.dispComp {
+  composes: add;
   white-space: nowrap;
+  position: absolute;
+  top: 50%;
   transform: translate(-100%, -50%);
 }
 
-.add {
-  composes: default;
-  position: static;
-  transform: translate(0%, 0%);
-}
-
-.save {
-  composes: default;
+.mobileSave {
+  composes: add;
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -38,11 +42,11 @@
 
 /* PC用の設定 */
 @media (min-width: 768px) {
-  .default {
+  .add {
     padding: 0.5rem 1.5rem;
   }
 
-  .default + .default {
+  .comp {
     left: 6rem;
   }
 }

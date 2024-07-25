@@ -1,46 +1,47 @@
-import { deflate } from "zlib";
 import styles from "./button.module.css";
-import { Component, ReactElement } from "react";
 
-interface Button {
+type Button = {
   text: string;
-  type: "default" | "comp" | "add" | "save";
-}
+  type: "add" | "save" | "comp" | "dispComp";
+};
 
 // ボタンコンポーネント
-export default function Button(button: Button, inputValue = "") {
-  // 「完了」ボタンと「削除」ボタンのスタイル
-  if (button.type === "default") {
-    return (
-      <button className={styles.default} type="button">
-        {button.text}
-      </button>
-    );
-  } else if (button.type === "comp") {
-    return (
-      <button className={styles.comp} type="button">
-        {button.text}
-      </button>
-    );
-  } else if (button.type === "add") {
+export default function Button({ text, type }: Button) {
+  //「追加」ボタン
+  if (type === "add") {
     return (
       <button
         className={styles.add}
         type="button"
-        // onClick={(e) => {
-        //   e.preventDefault();
-        //   if (inputValue !== "") {
-        //     alert("Todoを入力してください");
-        //   }
+        // onClick={() => {
+        //   const root = createRoot(document.getElementById("todos")!);
+        //   root.render(<Todo toggleInfo={toggleInfo} />);
+        //   const todos = document.getElementById("todos");
+        //   createPortal(<Todo />, todos)
         // }}
       >
-        {button.text}
+        {text}
       </button>
     );
-  } else if (button.type === "save") {
+    // 「保存」ボタン
+  } else if (type === "save") {
     return (
       <button className={styles.save} type="button">
-        {button.text}
+        {text}
+      </button>
+    );
+    // 「完了」ボタン
+  } else if (type === "comp") {
+    return (
+      <button className={styles.comp} type="button">
+        {text}
+      </button>
+    );
+    // 「完了タスクを表示」ボタン
+  } else if (type === "dispComp") {
+    return (
+      <button className={styles.dispComp} type="button">
+        {text}
       </button>
     );
   }
