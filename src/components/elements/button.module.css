@@ -2,31 +2,31 @@
   cursor: pointer;
 }
 
-.add {
+.btnAdd {
   composes: btn;
-  color: var(--white);
-  background-color: var(--black);
+  /* color: var(--white); */
+  background-color: lightcyan;
   padding: 0.2rem 0.4rem;
   border-radius: 0.4rem;
 }
 
-.save {
-  composes: add;
+.btnSave {
+  composes: btnAdd;
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
 }
 
-.comp {
-  composes: add;
+.btnComp {
+  composes: btnAdd;
   position: absolute;
   top: 50%;
   left: 3.5rem;
   transform: translateY(-50%);
 }
 
-.dispComp {
-  composes: add;
+.btnDispComp {
+  composes: btnAdd;
   white-space: nowrap;
   position: absolute;
   top: 50%;
@@ -34,7 +34,7 @@
 }
 
 .mobileSave {
-  composes: add;
+  composes: btnAdd;
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -42,18 +42,18 @@
 
 /* PC用の設定 */
 @media (min-width: 768px) {
-  .add {
+  .btnAdd {
     padding: 0.5rem 1.5rem;
   }
 
-  .comp {
+  .btnComp {
     left: 6rem;
   }
 }
 
 /* 大きい画面用の設定 */
 @media (min-width: 1400px) {
-  .add {
+  .btnAdd {
     left: 49.625rem;
   }
 }

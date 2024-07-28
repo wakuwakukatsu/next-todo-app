@@ -1,13 +1,13 @@
 "use client";
 
 import styles from "./todo.module.css";
-import { getUniqueStr } from "@/utility/util";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCalendar, faFile } from "@fortawesome/free-regular-svg-icons";
+import { faFile } from "@fortawesome/free-regular-svg-icons";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { Dispatch, SetStateAction } from "react";
 
+// Todoのデータ型
 type Todo = {
   id: number;
   title: string;
@@ -16,70 +16,97 @@ type Todo = {
   completed: boolean;
 };
 
+// Todoコンポーネントの引数のデータ型
 type Props = {
-  todos: Todo[];
+  todo: Todo;
   setTodoTitle: Dispatch<SetStateAction<string | null>>;
+  todoDayLimit: string | null;
   setTodoDayLimit: Dispatch<SetStateAction<string | null>>;
   setTodoMemo: Dispatch<SetStateAction<string | null>>;
-  toggleInfo: () => void;
+  setIsBtnDisplayed: Dispatch<SetStateAction<boolean>>;
+  toggleEdit: () => void;
 };
 
+// Todoコンポーネント
 export default function Todo({
-  todos,
+  todo,
   setTodoTitle,
+  todoDayLimit,
   setTodoDayLimit,
   setTodoMemo,
-  toggleInfo,
+  setIsBtnDisplayed,
+  toggleEdit,
 }: Props) {
-  const [uniqueStr1, setUniqueStr1] = useState("1");
-  const [uniqueStr2, setUniqueStr2] = useState("2");
-
   useEffect(() => {
-    setUniqueStr1(getUniqueStr());
-    setUniqueStr2(getUniqueStr());
+    // 一つのチェックボックスにのみチェックが入るようにする。
+    (() => {
+      const inputs = document.getElementsByClassName(
+        `${styles.checkTodo}`
+      ) as HTMLCollectionOf<HTMLInputElement>;
+      for (let i = 0; i < inputs.length; i++) {
+        inputs[i].addEventListener("click", function () {
+          if (this.checked) {
+            for (let j = 0; j < inputs.length; j++) {
+              inputs[j].checked = false;
+            }
+            this.checked = true;
+            setIsBtnDisplayed(true);
+          } else {
+            setIsBtnDisplayed(false);
+          }
+        });
+      }
+    })();
   }, []);
 
   return (
-    <>
-      {todos.map((todo) => (
-        <div key={todo.id} className={styles.container} id={`${uniqueStr1}`}>
-          <div className={styles.containerTodo}>
-            <input type="checkbox" className={styles.checkbox} />
-            <textarea
-              className={styles.textTodo}
-              placeholder="Todo"
-              defaultValue={todo.title}
-              rows={2}
-              wrap="soft"
-              id={uniqueStr2}
-              onInput={() => {
-                const container = document.getElementById(`${uniqueStr1}`);
-                const ta = document.getElementById(`${uniqueStr2}`);
-                const sh = ta?.scrollHeight;
-                if (container !== null) {
-                  container.style.height = sh + "px";
-                }
-              }}
-            />
-          </div>
-          <div className={styles.containerIcons}>
-            <input type="text" className={styles.deadLine} placeholder="期限" />
-            <FontAwesomeIcon icon={faCalendar} className={styles.calendar} />
+    <div className={styles.containerTodo} id={`todoID${todo.id}`}>
+      <div className={styles.wrapperTodo}>
+        <input type="checkbox" name="checkTodo" className={styles.checkTodo} />
+        <textarea
+          name="todoTitle"
+          className={styles.todoTitle}
+          placeholder="Todo"
+          defaultValue={todo.title}
+          rows={2}
+          wrap="soft"
+          id={`todoTitleID${todo.id}`}
+          onInput={() => {
+            const containerTodo = document.getElementById(`todoID${todo.id}`);
+            const todoTitle = document.getElementById(`todoTitleID${todo.id}`);
+            const sh = todoTitle?.scrollHeight;
+            if (containerTodo !== null) {
+              containerTodo.style.height = sh + "px";
+            }
+          }}
+        />
+      </div>
+      <div className={styles.containerIcons}>
+        <div className={styles.wrapperIcons}>
+          <input
+            type="date"
+            className={styles.dayLimit}
+            value={todoDayLimit || ""}
+            onChange={(e) => {
+              setTodoDayLimit(e.target.value);
+            }}
+          />
+          <button>
             <FontAwesomeIcon icon={faFile} className={styles.memo} />
-            <button
-              className={styles.btnInfo}
-              onClick={() => {
-                setTodoTitle(todo.title);
-                setTodoDayLimit(todo.dayLimit);
-                setTodoMemo(todo.memo);
-                toggleInfo();
-              }}
-            >
-              <FontAwesomeIcon icon={faBars} className={styles.menu} />
-            </button>
-          </div>
+          </button>
         </div>
-      ))}
-    </>
+        <button
+          className={styles.btnInfo}
+          onClick={() => {
+            setTodoTitle(todo.title);
+            setTodoDayLimit(todo.dayLimit);
+            setTodoMemo(todo.memo);
+            toggleEdit();
+          }}
+        >
+          <FontAwesomeIcon icon={faBars} className={styles.menu} />
+        </button>
+      </div>
+    </div>
   );
 }

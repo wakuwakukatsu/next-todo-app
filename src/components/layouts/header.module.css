@@ -1,9 +1,9 @@
-.flexContainer {
+.containerHeader {
   background-color: var(--bg-color);
   height: 3rem;
 }
 
-.flexContainer h1 {
+.containerHeader h1 {
   color: var(--black);
   font-size: var(--heading1);
   padding-left: 1rem;
