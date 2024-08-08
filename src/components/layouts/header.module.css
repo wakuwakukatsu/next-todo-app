@@ -1,6 +1,6 @@
 .containerHeader {
-  background-color: var(--bg-color);
   height: 3rem;
+  padding-bottom: 1rem;
 }
 
 .containerHeader h1 {

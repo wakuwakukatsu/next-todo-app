@@ -1,24 +1,16 @@
 "use client";
 
-import styles from "./todo.module.css";
+import styles from "./todoItem.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFile } from "@fortawesome/free-regular-svg-icons";
-import { faBars } from "@fortawesome/free-solid-svg-icons";
-import { useEffect } from "react";
+import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import { Dispatch, SetStateAction } from "react";
+import { Todo } from "@prisma/client";
 
-// Todoのデータ型
-type Todo = {
-  id: number;
-  title: string;
-  dayLimit: string;
-  memo: string;
-  completed: boolean;
-};
-
-// Todoコンポーネントの引数のデータ型
-type Props = {
+// TodoItemコンポーネントの引数のデータ型
+type TodoItem = {
   todo: Todo;
+  setTodoId: Dispatch<SetStateAction<number | null>>;
   setTodoTitle: Dispatch<SetStateAction<string | null>>;
   todoDayLimit: string | null;
   setTodoDayLimit: Dispatch<SetStateAction<string | null>>;
@@ -27,53 +19,56 @@ type Props = {
   toggleEdit: () => void;
 };
 
-// Todoコンポーネント
-export default function Todo({
+// TodoItemコンポーネント
+export default function TodoItem({
   todo,
+  setTodoId,
   setTodoTitle,
   todoDayLimit,
   setTodoDayLimit,
   setTodoMemo,
   setIsBtnDisplayed,
   toggleEdit,
-}: Props) {
-  useEffect(() => {
-    // 一つのチェックボックスにのみチェックが入るようにする。
-    (() => {
-      const inputs = document.getElementsByClassName(
-        `${styles.checkTodo}`
-      ) as HTMLCollectionOf<HTMLInputElement>;
-      for (let i = 0; i < inputs.length; i++) {
-        inputs[i].addEventListener("click", function () {
-          if (this.checked) {
-            for (let j = 0; j < inputs.length; j++) {
-              inputs[j].checked = false;
-            }
-            this.checked = true;
-            setIsBtnDisplayed(true);
-          } else {
-            setIsBtnDisplayed(false);
-          }
-        });
-      }
-    })();
-  }, []);
-
+}: TodoItem) {
   return (
-    <div className={styles.containerTodo} id={`todoID${todo.id}`}>
+    <div className={styles.containerTodo} id={`todoId${todo.id}`}>
       <div className={styles.wrapperTodo}>
-        <input type="checkbox" name="checkTodo" className={styles.checkTodo} />
+        <input
+          type="checkbox"
+          name="checkTodo"
+          className={styles.checkTodo}
+          id={`checkTodo${todo.id}`}
+          onClick={() => {
+            const currentCheckTodo = document.getElementById(
+              `checkTodo${todo.id}`
+            ) as HTMLInputElement;
+            const checkTodo = document.getElementsByClassName(
+              `${styles.checkTodo}`
+            ) as HTMLCollectionOf<HTMLInputElement>;
+            if (currentCheckTodo.checked) {
+              for (let i = 0; i < checkTodo.length; i++) {
+                checkTodo[i].checked = false;
+              }
+              currentCheckTodo.checked = true;
+              setTodoId(todo.id);
+              setIsBtnDisplayed(true);
+            } else {
+              setTodoId(null);
+              setIsBtnDisplayed(false);
+            }
+          }}
+        />
         <textarea
           name="todoTitle"
           className={styles.todoTitle}
-          placeholder="Todo"
+          placeholder="ToDo"
           defaultValue={todo.title}
           rows={2}
           wrap="soft"
-          id={`todoTitleID${todo.id}`}
+          id={`todoTitleId${todo.id}`}
           onInput={() => {
-            const containerTodo = document.getElementById(`todoID${todo.id}`);
-            const todoTitle = document.getElementById(`todoTitleID${todo.id}`);
+            const containerTodo = document.getElementById(`todoId${todo.id}`);
+            const todoTitle = document.getElementById(`todoTitleId${todo.id}`);
             const sh = todoTitle?.scrollHeight;
             if (containerTodo !== null) {
               containerTodo.style.height = sh + "px";
@@ -104,7 +99,7 @@ export default function Todo({
             toggleEdit();
           }}
         >
-          <FontAwesomeIcon icon={faBars} className={styles.menu} />
+          <FontAwesomeIcon icon={faPenToSquare} className={styles.menu} />
         </button>
       </div>
     </div>

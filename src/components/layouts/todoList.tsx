@@ -1,22 +1,14 @@
 "use client";
 
-import styles from "./todos.module.css";
+import styles from "./todoList.module.css";
 import Button from "../elements/button";
-import Todo from "./todo";
+import TodoItem from "./todoItem";
 import { faTrash, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState, useEffect } from "react";
+import { Todo } from "@prisma/client";
 
-// Todoのデータ型
-type Todo = {
-  id: number;
-  title: string;
-  dayLimit: string;
-  memo: string;
-  completed: boolean;
-};
-
-const testTodos: Todo[] = [
+const testTodoList: Todo[] = [
   {
     id: 0,
     title: "todo1",
@@ -167,10 +159,12 @@ const newTodo: Todo = {
   completed: false,
 };
 
-// Todosコンポーネント
-export default function Todos() {
+// TodoListコンポーネント
+export default function todoList() {
   // Todoリストを更新するための変数
-  const [todos, setTodos] = useState<Todo[]>([]);
+  const [todoList, setTodoList] = useState<Todo[]>([]);
+  // 現在選択しているTodoのidを変更するための変数
+  const [todoId, setTodoId] = useState<number | null>(null);
   // モバイル版の編集画面で「Todoのタイトル」を変更するための変数
   const [todoTitle, setTodoTitle] = useState<string | null>(null);
   // モバイル版の編集画面で「Todoの日限」を変更するための変数
@@ -190,34 +184,84 @@ export default function Todos() {
   };
 
   useEffect(() => {
-    const getTodos = () => {
-      setTodos(testTodos);
+    // DBに保存されたToDoリストを取得
+    const getTodoList = async () => {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/todo`);
+      const todoList = await response.json();
+      setTodoList(todoList);
     };
-    getTodos();
+    getTodoList();
   }, []);
 
   return (
-    <div className={styles.container}>
+    <div>
       <div className={styles.containerMain}>
+        {/* ボタンやアイコンが表示される領域 */}
         <div className={styles.containerBtns}>
           <div className={isBtnDisplayed ? styles.showBtns : styles.hideBtns}>
-            <Button text="保存" type="save" />
+            {/* 「保存」ボタン（ToDoタイトルの変更を保存） */}
+            <Button
+              text="保存"
+              type="save"
+              todoList={todoList}
+              setTodoList={setTodoList}
+              todoId={todoId}
+              isEditOpen={isEditOpen}
+              setIsBtnDisplayed={setIsBtnDisplayed}
+            />
             {isCompDisplayed ? (
-              <Button text="戻す" type="comp" />
+              // 「戻す」ボタン（ToDoを完了タスクから戻す）
+              <Button
+                text="戻す"
+                type="comp"
+                todoList={todoList}
+                setTodoList={setTodoList}
+                todoId={todoId}
+                setIsBtnDisplayed={setIsBtnDisplayed}
+                isCompDisplayed={isCompDisplayed}
+              />
             ) : (
-              <Button text="完了" type="comp" />
+              // 「完了」ボタン（ToDo完了タスクに移動）
+              <Button
+                text="完了"
+                type="comp"
+                todoList={todoList}
+                setTodoList={setTodoList}
+                todoId={todoId}
+                setIsBtnDisplayed={setIsBtnDisplayed}
+                isCompDisplayed={isCompDisplayed}
+              />
             )}
-            <FontAwesomeIcon icon={faTrash} className={styles.deleteTodo} />
+            {/* 「削除」アイコン（ToDoを削除） */}
+            <button
+              onClick={async (e) => {
+                e.preventDefault();
+                const response = await fetch(
+                  `${process.env.NEXT_PUBLIC_API_URL}/todo/${todoId}`,
+                  {
+                    method: "DELETE",
+                  }
+                );
+                const deleteTodo = await response.json();
+                setTodoList(
+                  todoList.filter((todo) => todo.id !== deleteTodo.id)
+                );
+              }}
+            >
+              <FontAwesomeIcon icon={faTrash} className={styles.deleteTodo} />
+            </button>
           </div>
           <div className={styles.wrapperBtnDispComp}>
             {isCompDisplayed ? (
+              // 「ToDoリストを表示」ボタン（完了タスク表示からToDoリスト表示に切り替える）
               <Button
-                text="Todoリストを表示"
+                text="ToDoリストを表示"
                 type="dispComp"
                 setIsBtnDisplayed={setIsBtnDisplayed}
                 setIsCompDisplayed={setIsCompDisplayed}
               />
             ) : (
+              // 「完了タスクを表示」ボタン
               <Button
                 text="完了タスクを表示"
                 type="dispComp"
@@ -228,17 +272,20 @@ export default function Todos() {
           </div>
         </div>
 
-        {/* Todoリストを表示 */}
+        {/* Todoリストが表示される領域 */}
         <div
-          className={isCompDisplayed ? styles.compTodos : styles.incompTodos}
-          id="containerTodos"
+          className={
+            isCompDisplayed ? styles.compTodoList : styles.incompTodoList
+          }
         >
           {isCompDisplayed
-            ? todos
+            ? [...todoList]
+                .reverse()
                 .filter((todo) => todo.completed === true)
                 .map((todo) => (
-                  <Todo
+                  <TodoItem
                     todo={todo}
+                    setTodoId={setTodoId}
                     setTodoTitle={setTodoTitle}
                     todoDayLimit={todoDayLimit}
                     setTodoDayLimit={setTodoDayLimit}
@@ -248,11 +295,12 @@ export default function Todos() {
                     key={todo.id}
                   />
                 ))
-            : todos
+            : todoList
                 .filter((todo) => todo.completed === false)
                 .map((todo) => (
-                  <Todo
+                  <TodoItem
                     todo={todo}
+                    setTodoId={setTodoId}
                     setTodoTitle={setTodoTitle}
                     todoDayLimit={todoDayLimit}
                     setTodoDayLimit={setTodoDayLimit}
@@ -264,7 +312,7 @@ export default function Todos() {
                 ))}
         </div>
 
-        {/* モバイル版のTodo、日限、メモを編集する画面 */}
+        {/* タイトル、日限、メモを編集するモバイル版の画面 */}
         <div className={isEditOpen ? styles.open : undefined}>
           <div className={styles.info}>
             <div className={styles.wrapperBtn}>
@@ -279,7 +327,7 @@ export default function Todos() {
               onChange={(e) => {
                 setTodoTitle(e.target.value);
               }}
-              placeholder="Todo"
+              placeholder="ToDo"
               rows={2}
               wrap="soft"
             ></textarea>
@@ -305,12 +353,14 @@ export default function Todos() {
               wrap="soft"
             ></textarea>
             <div className={styles.wrapperSaveBtn}>
+              {/* 「保存」ボタン（タイトル、日限、メモの変更を保存） */}
               <Button text="保存" type="save" />
             </div>
           </div>
         </div>
       </div>
 
+      {/* ToDoを追加するフォームが表示される領域 */}
       <div
         className={isCompDisplayed ? styles.hideAddTodo : styles.showAddTodo}
         id="containerAddTodo"
@@ -319,12 +369,12 @@ export default function Todos() {
           <textarea
             name="addTodo"
             className={styles.addTodo}
-            placeholder="Todoを入力"
+            id="addTodo"
+            placeholder="ToDo"
             wrap="soft"
             onInput={() => {
               const element = document.getElementById("containerAddTodo");
               const rect = element?.getBoundingClientRect();
-              console.log(`${rect?.height}px)`);
               document.documentElement.style.setProperty(
                 "--inputArea-height",
                 `${rect?.height}px`
@@ -332,8 +382,14 @@ export default function Todos() {
             }}
           />
         </div>
-        <div className={styles.wrapperAddBtn}>
-          <Button text="追加" type="add" />
+        <div className={styles.wrapperBtnAdd}>
+          {/* 「追加」ボタン（ToDoを追加） */}
+          <Button
+            text="追加"
+            type="add"
+            todoList={todoList}
+            setTodoList={setTodoList}
+          />
         </div>
       </div>
     </div>
