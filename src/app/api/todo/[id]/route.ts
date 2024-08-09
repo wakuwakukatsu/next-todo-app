@@ -38,6 +38,21 @@ export async function PATCH(
       });
       return Response.json(response);
     }
+
+    // 「保存」ボタンを押した時の処理（ToDoを更新）
+    case "saveTodo": {
+      const response = await prisma.todo.update({
+        where: {
+          id,
+        },
+        data: {
+          title: updateTodo.title,
+          dayLimit: updateTodo.dayLimit,
+          memo: updateTodo.memo,
+        },
+      });
+      return Response.json(response);
+    }
   }
 }
 

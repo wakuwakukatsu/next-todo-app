@@ -15,8 +15,8 @@ type TodoItem = {
   todoDayLimit: string | null;
   setTodoDayLimit: Dispatch<SetStateAction<string | null>>;
   setTodoMemo: Dispatch<SetStateAction<string | null>>;
+  setIsEditOpen: Dispatch<SetStateAction<boolean>>;
   setIsBtnDisplayed: Dispatch<SetStateAction<boolean>>;
-  toggleEdit: () => void;
 };
 
 // TodoItemコンポーネント
@@ -27,8 +27,8 @@ export default function TodoItem({
   todoDayLimit,
   setTodoDayLimit,
   setTodoMemo,
+  setIsEditOpen,
   setIsBtnDisplayed,
-  toggleEdit,
 }: TodoItem) {
   return (
     <div className={styles.containerTodo} id={`todoId${todo.id}`}>
@@ -93,10 +93,11 @@ export default function TodoItem({
         <button
           className={styles.btnInfo}
           onClick={() => {
+            setTodoId(todo.id);
             setTodoTitle(todo.title);
             setTodoDayLimit(todo.dayLimit);
             setTodoMemo(todo.memo);
-            toggleEdit();
+            setIsEditOpen(true);
           }}
         >
           <FontAwesomeIcon icon={faPenToSquare} className={styles.menu} />

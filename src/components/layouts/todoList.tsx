@@ -160,16 +160,16 @@ const newTodo: Todo = {
 };
 
 // TodoListコンポーネント
-export default function todoList() {
-  // Todoリストを更新するための変数
+export default function TodoList() {
+  // ToDoリストを更新するための変数
   const [todoList, setTodoList] = useState<Todo[]>([]);
-  // 現在選択しているTodoのidを変更するための変数
+  // 現在選択しているToDoのidを変更するための変数
   const [todoId, setTodoId] = useState<number | null>(null);
-  // モバイル版の編集画面で「Todoのタイトル」を変更するための変数
+  // モバイル版の編集画面で「ToDoのタイトル」を変更するための変数
   const [todoTitle, setTodoTitle] = useState<string | null>(null);
-  // モバイル版の編集画面で「Todoの日限」を変更するための変数
+  // モバイル版の編集画面で「ToDoの日限」を変更するための変数
   const [todoDayLimit, setTodoDayLimit] = useState<string | null>(null);
-  // モバイル版の編集画面で「Todoのメモ」を変更するための変数
+  // モバイル版の編集画面で「ToDoのメモ」を変更するための変数
   const [todoMemo, setTodoMemo] = useState<string | null>(null);
   // モバイル版の編集画面を開閉するための変数
   const [isEditOpen, setIsEditOpen] = useState<boolean>(false);
@@ -177,11 +177,6 @@ export default function todoList() {
   const [isBtnDisplayed, setIsBtnDisplayed] = useState<boolean>(false);
   // 完了タスクを表示・非表示するための変数
   const [isCompDisplayed, setIsCompDisplayed] = useState<boolean>(false);
-
-  // モバイル版の編集画面を開閉するための関数
-  const toggleEdit = () => {
-    setIsEditOpen((prev) => !prev);
-  };
 
   useEffect(() => {
     // DBに保存されたToDoリストを取得
@@ -199,7 +194,7 @@ export default function todoList() {
         {/* ボタンやアイコンが表示される領域 */}
         <div className={styles.containerBtns}>
           <div className={isBtnDisplayed ? styles.showBtns : styles.hideBtns}>
-            {/* 「保存」ボタン（ToDoタイトルの変更を保存） */}
+            {/* 「保存」ボタン（タイトルの変更を保存） */}
             <Button
               text="保存"
               type="save"
@@ -207,6 +202,7 @@ export default function todoList() {
               setTodoList={setTodoList}
               todoId={todoId}
               isEditOpen={isEditOpen}
+              setIsEditOpen={setIsEditOpen}
               setIsBtnDisplayed={setIsBtnDisplayed}
             />
             {isCompDisplayed ? (
@@ -221,7 +217,7 @@ export default function todoList() {
                 isCompDisplayed={isCompDisplayed}
               />
             ) : (
-              // 「完了」ボタン（ToDo完了タスクに移動）
+              // 「完了」ボタン（ToDoを完了タスクに移動）
               <Button
                 text="完了"
                 type="comp"
@@ -272,7 +268,7 @@ export default function todoList() {
           </div>
         </div>
 
-        {/* Todoリストが表示される領域 */}
+        {/* ToDoリストが表示される領域 */}
         <div
           className={
             isCompDisplayed ? styles.compTodoList : styles.incompTodoList
@@ -290,8 +286,8 @@ export default function todoList() {
                     todoDayLimit={todoDayLimit}
                     setTodoDayLimit={setTodoDayLimit}
                     setTodoMemo={setTodoMemo}
+                    setIsEditOpen={setIsEditOpen}
                     setIsBtnDisplayed={setIsBtnDisplayed}
-                    toggleEdit={toggleEdit}
                     key={todo.id}
                   />
                 ))
@@ -305,8 +301,8 @@ export default function todoList() {
                     todoDayLimit={todoDayLimit}
                     setTodoDayLimit={setTodoDayLimit}
                     setTodoMemo={setTodoMemo}
+                    setIsEditOpen={setIsEditOpen}
                     setIsBtnDisplayed={setIsBtnDisplayed}
-                    toggleEdit={toggleEdit}
                     key={todo.id}
                   />
                 ))}
@@ -316,13 +312,19 @@ export default function todoList() {
         <div className={isEditOpen ? styles.open : undefined}>
           <div className={styles.info}>
             <div className={styles.wrapperBtn}>
-              <button className={styles.btnClose} onClick={toggleEdit}>
+              <button
+                className={styles.btnClose}
+                onClick={() => {
+                  setIsEditOpen(false);
+                }}
+              >
                 <FontAwesomeIcon icon={faXmark} className={styles.close} />
               </button>
             </div>
             <textarea
               name="mobileTodoTitle"
               className={styles.todoTitle}
+              id="editTitle"
               value={todoTitle || ""}
               onChange={(e) => {
                 setTodoTitle(e.target.value);
@@ -335,6 +337,7 @@ export default function todoList() {
               <input
                 type="date"
                 className={styles.dayLimit}
+                id="editDayLimit"
                 value={todoDayLimit || ""}
                 onChange={(e) => {
                   setTodoDayLimit(e.target.value);
@@ -344,6 +347,7 @@ export default function todoList() {
             <textarea
               name="todoMemo"
               className={styles.todoMemo}
+              id="editMemo"
               value={todoMemo || ""}
               onChange={(e) => {
                 setTodoMemo(e.target.value);
@@ -354,7 +358,15 @@ export default function todoList() {
             ></textarea>
             <div className={styles.wrapperSaveBtn}>
               {/* 「保存」ボタン（タイトル、日限、メモの変更を保存） */}
-              <Button text="保存" type="save" />
+              <Button
+                text="保存"
+                type="save"
+                todoList={todoList}
+                setTodoList={setTodoList}
+                todoId={todoId}
+                isEditOpen={isEditOpen}
+                setIsEditOpen={setIsEditOpen}
+              />
             </div>
           </div>
         </div>

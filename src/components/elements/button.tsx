@@ -10,6 +10,7 @@ type Button = {
   setTodoList?: Dispatch<SetStateAction<Todo[]>>;
   todoId?: number | null;
   isEditOpen?: boolean;
+  setIsEditOpen?: Dispatch<SetStateAction<boolean>>;
   setIsBtnDisplayed?: Dispatch<SetStateAction<boolean>>;
   isCompDisplayed?: boolean;
   setIsCompDisplayed?: Dispatch<SetStateAction<boolean>>;
@@ -23,6 +24,7 @@ export default function Button({
   setTodoList,
   todoId,
   isEditOpen,
+  setIsEditOpen,
   setIsBtnDisplayed,
   isCompDisplayed,
   setIsCompDisplayed,
@@ -70,23 +72,8 @@ export default function Button({
           className={styles.btnSave}
           type="button"
           onClick={async () => {
-            function update() {
-              console.log("");
-            }
-            if (isEditOpen) {
-              console.log("isEditOpenがtrueの時の処理");
-            } else {
-              const todoTitle = document.getElementById(
-                `todoTitleId${todoId}`
-              ) as HTMLTextAreaElement;
-              const todoTitleString: string = todoTitle.value;
-              let updateTodo: Todo = {
-                id: 0,
-                title: todoTitleString,
-                dayLimit: "",
-                memo: "",
-                completed: false,
-              };
+            // ToDoの変更を保存する関数
+            async function update(updateType: string, updateTodo: Todo) {
               const response = await fetch(
                 `${process.env.NEXT_PUBLIC_API_URL}/todo/${todoId}`,
                 {
@@ -95,16 +82,18 @@ export default function Button({
                     "Content-Type": "application/json",
                   },
                   body: JSON.stringify({
-                    updateType: "saveTitle",
+                    updateType: updateType,
                     updateTodo: updateTodo,
                   }),
                 }
               );
               updateTodo = await response.json();
+              console.log(updateTodo);
               if (setTodoList !== undefined && todoList !== undefined) {
                 setTodoList(
                   todoList.map((todo) => {
                     if (todo.id === updateTodo.id) {
+                      console.log(todo.id);
                       return updateTodo;
                     } else {
                       return todo;
@@ -112,7 +101,48 @@ export default function Button({
                   })
                 );
               }
-              // チェックマークを外す処理をここに書く！
+            }
+            if (isEditOpen) {
+              const todoTitle = document.getElementById(
+                "editTitle"
+              ) as HTMLTextAreaElement;
+              const titleString: string = todoTitle.value;
+              const todoDayLimit = document.getElementById(
+                "editDayLimit"
+              ) as HTMLInputElement;
+              const dayLimitString: string = todoDayLimit.value;
+              const todoMemo = document.getElementById(
+                "editMemo"
+              ) as HTMLTextAreaElement;
+              const memoString: string = todoMemo.value;
+              const updateTodo: Todo = {
+                id: 0,
+                title: titleString,
+                dayLimit: dayLimitString,
+                memo: memoString,
+                completed: false,
+              };
+              await update("saveTodo", updateTodo);
+              if (setIsEditOpen !== undefined) {
+                setIsEditOpen(false);
+              }
+            } else {
+              const todoTitle = document.getElementById(
+                `todoTitleId${todoId}`
+              ) as HTMLTextAreaElement;
+              const titleString: string = todoTitle.value;
+              const updateTodo: Todo = {
+                id: 0,
+                title: titleString,
+                dayLimit: "",
+                memo: "",
+                completed: false,
+              };
+              await update("saveTitle", updateTodo);
+              const checkTodo = document.getElementById(
+                `checkTodo${todoId}`
+              ) as HTMLInputElement;
+              checkTodo.checked = false;
               if (setIsBtnDisplayed) {
                 setIsBtnDisplayed(false);
               }
@@ -171,7 +201,7 @@ export default function Button({
           {text}
         </button>
       );
-    // 「完了タスクを表示」ボタン
+    // 「完了タスクを表示」ボタン・「ToDoリストを表示」ボタン
     case "dispComp":
       return (
         <button
