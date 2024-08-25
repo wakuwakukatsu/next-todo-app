@@ -6,6 +6,6 @@
 .containerHeader h1 {
   color: var(--black);
   font-size: var(--heading1);
-  padding-left: 1rem;
   line-height: 3rem;
+  padding-left: 1rem;
 }

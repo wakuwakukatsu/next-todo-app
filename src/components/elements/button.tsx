@@ -16,7 +16,7 @@ type Button = {
   setIsCompDisplayed?: Dispatch<SetStateAction<boolean>>;
 };
 
-// ボタンコンポーネント
+// Buttonコンポーネント
 export default function Button({
   text,
   type,
@@ -29,6 +29,36 @@ export default function Button({
   isCompDisplayed,
   setIsCompDisplayed,
 }: Button) {
+  // ToDoの変更を保存する関数
+  async function update(updateType: string, updateTodo: Todo): Promise<Todo> {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/todo/${todoId}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          updateType: updateType,
+          updateTodo: updateTodo,
+        }),
+      }
+    );
+    updateTodo = await response.json();
+    if (setTodoList !== undefined && todoList !== undefined) {
+      setTodoList(
+        todoList.map((todo) => {
+          if (todo.id === updateTodo.id) {
+            return updateTodo;
+          } else {
+            return todo;
+          }
+        })
+      );
+    }
+    return updateTodo;
+  }
+
   switch (type) {
     //「追加」ボタン
     case "add":
@@ -65,6 +95,7 @@ export default function Button({
           {text}
         </button>
       );
+
     // 「保存」ボタン
     case "save":
       return (
@@ -72,60 +103,37 @@ export default function Button({
           className={styles.btnSave}
           type="button"
           onClick={async () => {
-            // ToDoの変更を保存する関数
-            async function update(updateType: string, updateTodo: Todo) {
-              const response = await fetch(
-                `${process.env.NEXT_PUBLIC_API_URL}/todo/${todoId}`,
-                {
-                  method: "PATCH",
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify({
-                    updateType: updateType,
-                    updateTodo: updateTodo,
-                  }),
-                }
-              );
-              updateTodo = await response.json();
-              console.log(updateTodo);
-              if (setTodoList !== undefined && todoList !== undefined) {
-                setTodoList(
-                  todoList.map((todo) => {
-                    if (todo.id === updateTodo.id) {
-                      console.log(todo.id);
-                      return updateTodo;
-                    } else {
-                      return todo;
-                    }
-                  })
-                );
-              }
-            }
+            // 編集画面が表示されている時の処理（ToDoを更新）
             if (isEditOpen) {
-              const todoTitle = document.getElementById(
+              const editTitle = document.getElementById(
                 "editTitle"
               ) as HTMLTextAreaElement;
-              const titleString: string = todoTitle.value;
-              const todoDayLimit = document.getElementById(
+              const editTitleString: string = editTitle.value;
+              const editDayLimit = document.getElementById(
                 "editDayLimit"
               ) as HTMLInputElement;
-              const dayLimitString: string = todoDayLimit.value;
-              const todoMemo = document.getElementById(
+              const editDayLimitString: string = editDayLimit.value;
+              const editMemo = document.getElementById(
                 "editMemo"
               ) as HTMLTextAreaElement;
-              const memoString: string = todoMemo.value;
-              const updateTodo: Todo = {
+              const editMemoString: string = editMemo.value;
+              let updateTodo: Todo = {
                 id: 0,
-                title: titleString,
-                dayLimit: dayLimitString,
-                memo: memoString,
+                title: editTitleString,
+                dayLimit: editDayLimitString,
+                memo: editMemoString,
                 completed: false,
+                completedAt: null,
               };
-              await update("saveTodo", updateTodo);
+              updateTodo = await update("saveTodo", updateTodo);
+              const todoTitle = document.getElementById(
+                `todoTitleId${todoId}`
+              ) as HTMLTextAreaElement;
+              todoTitle.value = updateTodo.title;
               if (setIsEditOpen !== undefined) {
                 setIsEditOpen(false);
               }
+              // 編集画面が表示されていない時の処理（タイトルのみ更新）
             } else {
               const todoTitle = document.getElementById(
                 `todoTitleId${todoId}`
@@ -137,6 +145,7 @@ export default function Button({
                 dayLimit: "",
                 memo: "",
                 completed: false,
+                completedAt: null,
               };
               await update("saveTitle", updateTodo);
               const checkTodo = document.getElementById(
@@ -152,55 +161,38 @@ export default function Button({
           {text}
         </button>
       );
-    // 「完了」ボタン
+
+    // 「完了」・「戻す」ボタン
     case "comp":
       return (
         <button
           className={styles.btnComp}
           type="button"
           onClick={async () => {
-            if (isCompDisplayed !== undefined) {
-              let updateTodo: Todo = {
-                id: 0,
-                title: "",
-                dayLimit: "",
-                memo: "",
-                completed: isCompDisplayed,
-              };
-              const response = await fetch(
-                `${process.env.NEXT_PUBLIC_API_URL}/todo/${todoId}`,
-                {
-                  method: "PATCH",
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify({
-                    updateType: "changeComp",
-                    updateTodo: updateTodo,
-                  }),
-                }
-              );
-              updateTodo = await response.json();
-              if (setTodoList !== undefined && todoList !== undefined) {
-                setTodoList(
-                  todoList.map((todo) => {
-                    if (todo.id === updateTodo.id) {
-                      return updateTodo;
-                    } else {
-                      return todo;
-                    }
-                  })
-                );
-              }
-              if (setIsBtnDisplayed) {
-                setIsBtnDisplayed(false);
-              }
+            const updateTodo: Todo = {
+              id: 0,
+              title: "",
+              dayLimit: "",
+              memo: "",
+              completed: false,
+              completedAt: null,
+            };
+            // 「戻す」ボタンを押した時の処理
+            if (isCompDisplayed) {
+              await update("incomplete", updateTodo);
+              // 「完了」ボタンを押した時の処理
+            } else {
+              await update("complete", updateTodo);
+            }
+            if (setIsBtnDisplayed) {
+              setIsBtnDisplayed(false);
             }
           }}
         >
           {text}
         </button>
       );
+
     // 「完了タスクを表示」ボタン・「ToDoリストを表示」ボタン
     case "dispComp":
       return (

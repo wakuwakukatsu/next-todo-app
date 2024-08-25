@@ -11,16 +11,31 @@ export async function PATCH(
   const id = Number(params.id);
   const { updateType, updateTodo }: { updateType: string; updateTodo: Todo } =
     await request.json();
-  // updateTypeの値によって処理を条件分岐
+  // updateTypeの値によって処理を分岐
   switch (updateType) {
-    // 「完了」ボタン・「戻す」ボタンを押した時の処理
-    case "changeComp": {
+    // 「完了」ボタンを押した時の処理
+    case "complete": {
       const response = await prisma.todo.update({
         where: {
           id,
         },
         data: {
-          completed: !updateTodo.completed,
+          completed: true,
+          completedAt: new Date(),
+        },
+      });
+      return Response.json(response);
+    }
+
+    // 「戻す」ボタンを押した時の処理
+    case "incomplete": {
+      const response = await prisma.todo.update({
+        where: {
+          id,
+        },
+        data: {
+          completed: false,
+          completedAt: null,
         },
       });
       return Response.json(response);
