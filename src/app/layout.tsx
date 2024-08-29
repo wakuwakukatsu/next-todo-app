@@ -6,7 +6,12 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "ToDoアプリ",
-  description: "これはToDoアプリです。",
+  description: "ToDoアプリです。",
+  openGraph: {
+    title: "ToDoアプリ",
+    description: "ToDoアプリです。",
+    siteName: "ToDoアプリ",
+  },
 };
 
 export default function RootLayout({
