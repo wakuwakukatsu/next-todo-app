@@ -1,6 +1,12 @@
 <div id="top"></div>
 
-### ToDo アプリ
+# ToDo アプリ
+
+## 特徴
+
+- 期限やメモを記録できる
+- 完了した ToDo を「完了タスク」に移動できる
+- 本日期限の ToDo を確認できる（PC のみ）
 
 ## 使用技術一覧
 
@@ -17,3 +23,13 @@
   <!-- ミドルウェア -->
   <img src="https://img.shields.io/badge/-Postgresql-336791.svg?logo=postgresql&style=plastic">
 </p>
+
+## 環境
+
+| 言語・フレームワーク | バージョン |
+| -------------------- | ---------- |
+| TypeScript           | 5.5.3      |
+| Node.js              | 18.18.0    |
+| Next.js              | 14.2.5     |
+| React                | 18.3.1     |
+| prisma               | 5.17.0     |
