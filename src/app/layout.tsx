@@ -10,6 +10,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "ToDoアプリ",
     description: "ToDoアプリです。",
+    url: "https://next-todo-app-omega-three.vercel.app/",
     siteName: "ToDoアプリ",
   },
 };
